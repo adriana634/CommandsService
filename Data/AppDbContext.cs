@@ -8,6 +8,13 @@ namespace CommandsService.Data
         public DbSet<Platform> Platforms => Set<Platform>();
         public DbSet<Command> Commands => Set<Command>();
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            Console.WriteLine("--> Using InMemory database");
+
+            optionsBuilder.UseInMemoryDatabase("CommandsDB");
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
