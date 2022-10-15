@@ -24,27 +24,27 @@ namespace CommandsService.Controllers
         {
             Console.WriteLine($"--> Hit GetCommandsForPlatform: {platformId}");
 
-            bool exists = this.commandRepo.PlatformExists(platformId);
+            var exists = commandRepo.PlatformExists(platformId);
             if (exists == false) return NotFound();
 
-            IEnumerable<Command> commands = this.commandRepo.GetCommandsForPlatform(platformId);
+            var commands = commandRepo.GetCommandsForPlatform(platformId);
 
-            IEnumerable<CommandReadDto> result = this.mapper.Map<IEnumerable<CommandReadDto>>(commands);
+            var result = mapper.Map<IEnumerable<CommandReadDto>>(commands);
             return Ok(result);
         }
 
         [HttpGet("{commandId}", Name = "GetCommandForPlatform")]
-        public ActionResult<IEnumerable<CommandReadDto>> GetCommandForPlatform(int platformId, int commandId)
+        public ActionResult<CommandReadDto> GetCommandForPlatform(int platformId, int commandId)
         {
             Console.WriteLine($"--> Hit GetCommandForPlatform: {platformId} / {commandId}");
 
-            bool exists = this.commandRepo.PlatformExists(platformId);
+            var exists = commandRepo.PlatformExists(platformId);
             if (exists == false) return NotFound();
 
-            Command command = this.commandRepo.GetCommand(platformId, commandId);
+            var command = commandRepo.GetCommand(platformId, commandId);
             if (command is null) return NotFound();
 
-            CommandReadDto result = this.mapper.Map<CommandReadDto>(command);
+            var result = mapper.Map<CommandReadDto>(command);
             return Ok(result);
         }
 
@@ -53,15 +53,15 @@ namespace CommandsService.Controllers
         {
             Console.WriteLine($"--> Hit CreateCommandForPlatform: {platformId}");
 
-            bool exists = this.commandRepo.PlatformExists(platformId);
+            var exists = commandRepo.PlatformExists(platformId);
             if (exists == false) return NotFound();
 
-            Command commandModel = this.mapper.Map<Command>(commandDto);
+            var commandModel = mapper.Map<Command>(commandDto);
 
-            this.commandRepo.CreateCommand(platformId, commandModel);
-            this.commandRepo.SaveChanges();
+            commandRepo.CreateCommand(platformId, commandModel);
+            commandRepo.SaveChanges();
 
-            CommandReadDto commandReadDto = this.mapper.Map<CommandReadDto>(commandModel);
+            var commandReadDto = mapper.Map<CommandReadDto>(commandModel);
             return CreatedAtRoute(nameof(GetCommandForPlatform),
                 new { PlatformId = commandReadDto.PlatformId, CommandId = commandReadDto.Id },
                 commandReadDto);

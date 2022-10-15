@@ -13,12 +13,12 @@ namespace CommandsService.Data
 
         public bool SaveChanges()
         {
-            return (this.context.SaveChanges() >= 0);
+            return (context.SaveChanges() >= 0);
         }
 
         public IEnumerable<Platform> GetAllPlatforms()
         {
-            return this.context.Platforms.ToList();
+            return context.Platforms.ToList();
         }
 
         public void CreatePlatform(Platform platform)
@@ -28,24 +28,29 @@ namespace CommandsService.Data
                 throw new ArgumentNullException(nameof(platform));
             }
 
-            this.context.Platforms.Add(platform);
+            context.Platforms.Add(platform);
         }
 
         public bool PlatformExists(int platformId)
         {
-            return this.context.Platforms.Any(platform => platform.Id == platformId);
+            return context.Platforms.Any(platform => platform.Id == platformId);
+        }
+
+        public bool ExternalPlatformExists(int externalPlatformId)
+        {
+            return context.Platforms.Any(platform => platform.ExternalId == externalPlatformId);
         }
 
         public IEnumerable<Command> GetCommandsForPlatform(int platformId)
         {
-            return this.context.Commands
+            return context.Commands
                 .Where(command => command.PlatformId == platformId)
                 .OrderBy(command => command.Platform.Name);
         }
 
         public Command GetCommand(int platformId, int commandId)
         {
-            return this.context.Commands
+            return context.Commands
                 .Where(command => command.PlatformId == platformId && command.Id == commandId)
                 .First();
         }
@@ -58,7 +63,7 @@ namespace CommandsService.Data
             }
 
             command.PlatformId = platformId;
-            this.context.Commands.Add(command);
+            context.Commands.Add(command);
         }
     }
 }

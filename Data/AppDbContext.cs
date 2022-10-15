@@ -5,8 +5,8 @@ namespace CommandsService.Data
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<Platform> Platforms => Set<Platform>();
-        public DbSet<Command> Commands => Set<Command>();
+        public DbSet<Platform> Platforms { get; set; }
+        public DbSet<Command> Commands { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

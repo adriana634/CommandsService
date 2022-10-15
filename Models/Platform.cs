@@ -12,8 +12,8 @@ namespace CommandsService.Models
         public int ExternalId { get; set; }
 
         [Required]
-        public string Name { get; set; } = default!;
+        public string Name { get; set; }
         
-        public ICollection<Command> Commands { get; set; } = new List<Command>();
+        public ICollection<Command> Commands { get; set; }
     }
 }

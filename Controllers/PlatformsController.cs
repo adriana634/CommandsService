@@ -24,9 +24,9 @@ namespace CommandsService.Controllers
         {
             Console.WriteLine("--> Getting Platforms from CommandsService");
 
-            IEnumerable<Platform> platforms = this.commandRepo.GetAllPlatforms();
-            
-            IEnumerable<PlatformReadDto> result = this.mapper.Map<IEnumerable<PlatformReadDto>>(platforms);
+            var platforms = commandRepo.GetAllPlatforms();
+
+            var result = mapper.Map<IEnumerable<PlatformReadDto>>(platforms);
             return Ok(result);
         }
 

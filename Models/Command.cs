@@ -9,14 +9,14 @@ namespace CommandsService.Models
         public int Id { get; set; }
 
         [Required]
-        public string HowTo { get; set; } = default!;
+        public string HowTo { get; set; }
 
         [Required]
-        public string CommandLine { get; set; } = default!;
+        public string CommandLine { get; set; }
 
         [Required]
         public int PlatformId { get; set; }
 
-        public Platform Platform { get; set; } = default!;
+        public Platform Platform { get; set; }
     }
 }
