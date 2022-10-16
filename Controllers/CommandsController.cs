@@ -12,17 +12,19 @@ namespace CommandsService.Controllers
     {
         private readonly ICommandRepo commandRepo;
         private readonly IMapper mapper;
+        private readonly ILogger<CommandsController> logger;
 
-        public CommandsController(ICommandRepo commandRepo, IMapper mapper)
+        public CommandsController(ICommandRepo commandRepo, IMapper mapper, ILogger<CommandsController> logger)
         {
             this.commandRepo = commandRepo;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<CommandReadDto>> GetCommandsForPlatform(int platformId)
         {
-            Console.WriteLine($"--> Hit GetCommandsForPlatform: {platformId}");
+            logger.LogInformation("Hit GetCommandsForPlatform: {PlatformId}", platformId);
 
             var exists = commandRepo.PlatformExists(platformId);
             if (exists == false) return NotFound();
@@ -36,7 +38,7 @@ namespace CommandsService.Controllers
         [HttpGet("{commandId}", Name = "GetCommandForPlatform")]
         public ActionResult<CommandReadDto> GetCommandForPlatform(int platformId, int commandId)
         {
-            Console.WriteLine($"--> Hit GetCommandForPlatform: {platformId} / {commandId}");
+            logger.LogInformation("Hit GetCommandForPlatform: {PlatformId} / {CommandId}", platformId, commandId);
 
             var exists = commandRepo.PlatformExists(platformId);
             if (exists == false) return NotFound();
@@ -51,7 +53,7 @@ namespace CommandsService.Controllers
         [HttpPost]
         public ActionResult<CommandReadDto> CreateCommandForPlatform(int platformId, CommandCreateDto commandDto)
         {
-            Console.WriteLine($"--> Hit CreateCommandForPlatform: {platformId}");
+            logger.LogInformation("Hit CreateCommandForPlatform: {PlatformId}", platformId);
 
             var exists = commandRepo.PlatformExists(platformId);
             if (exists == false) return NotFound();

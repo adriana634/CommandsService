@@ -5,12 +5,19 @@ namespace CommandsService.Data
 {
     public class AppDbContext : DbContext
     {
+        private readonly ILogger<AppDbContext> logger;
+
         public DbSet<Platform> Platforms { get; set; }
         public DbSet<Command> Commands { get; set; }
 
+        public AppDbContext(ILogger<AppDbContext> logger)
+        {
+            this.logger = logger;
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            Console.WriteLine("--> Using InMemory database");
+            logger.LogInformation("Using InMemory database");
 
             optionsBuilder.UseInMemoryDatabase("CommandsDB");
         }

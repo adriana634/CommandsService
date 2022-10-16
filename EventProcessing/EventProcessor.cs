@@ -10,6 +10,7 @@ namespace CommandsService.EventProcessing
     {
         private readonly IServiceScopeFactory scopeFactory;
         private readonly IMapper mapper;
+        private readonly ILogger<EventProcessor> logger;
 
         private enum EventType
         {
@@ -17,15 +18,16 @@ namespace CommandsService.EventProcessing
             PlatformPublished,
         }
 
-        public EventProcessor(IServiceScopeFactory scopeFactory, IMapper mapper)
+        public EventProcessor(IServiceScopeFactory scopeFactory, IMapper mapper, ILogger<EventProcessor> logger)
         {
             this.scopeFactory = scopeFactory;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         private EventType DetermineEventType(string notificationMessage)
         {
-            Console.WriteLine("--> Determining Event");
+            logger.LogInformation("Determining Event");
 
             try
             {
@@ -36,10 +38,10 @@ namespace CommandsService.EventProcessing
                     switch (eventType.Event)
                     {
                         case "Platform_Published":
-                            Console.WriteLine("--> Platform Published Event Detected");
+                            logger.LogInformation("Platform Published Event Detected");
                             return EventType.PlatformPublished;
                         default:
-                            Console.WriteLine("--> Could not determine the event type");
+                            logger.LogInformation("Could not determine the event type");
                             return EventType.Undetermined;
                     }
                 }
@@ -69,15 +71,17 @@ namespace CommandsService.EventProcessing
                 {
                     repo.CreatePlatform(platform);
                     repo.SaveChanges();
+
+                    logger.LogInformation("Platform added!");
                 }
                 else
                 {
-                    Console.WriteLine("--> Platform already exists...");
+                    logger.LogInformation("Platform already exists...");
                 }
             }
             catch(Exception ex)
             {
-                Console.WriteLine($"--> Could not add Platform to DB {ex.Message}");
+                logger.LogError("Could not add Platform to DB: {ExceptionMessage}", ex.Message);
             }
         }
 
@@ -88,8 +92,7 @@ namespace CommandsService.EventProcessing
             switch (eventType)
             {
                 case EventType.PlatformPublished:
-                    break;
-                default:
+                    AddPlatform(message);
                     break;
             }
         }

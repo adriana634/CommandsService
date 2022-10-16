@@ -1,3 +1,4 @@
+using CommandsService.AsyncDataServices;
 using CommandsService.Data;
 using CommandsService.EventProcessing;
 
@@ -5,10 +6,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.Configure<RabbitMQOptions>(
+    builder.Configuration.GetSection(RabbitMQOptions.RabbitMQ));
+
 builder.Services.AddDbContext<AppDbContext>();
 builder.Services.AddScoped<ICommandRepo, CommandRepo>();
 
 builder.Services.AddControllers();
+
+builder.Services.AddHostedService<MessageBusSubscriber>();
 
 builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
