@@ -48,11 +48,11 @@ namespace CommandsService.Data
                 .OrderBy(command => command.Platform.Name);
         }
 
-        public Command GetCommand(int platformId, int commandId)
+        public Command? GetCommand(int platformId, int commandId)
         {
             return context.Commands
                 .Where(command => command.PlatformId == platformId && command.Id == commandId)
-                .First();
+                .FirstOrDefault();
         }
 
         public void CreateCommand(int platformId, Command command)

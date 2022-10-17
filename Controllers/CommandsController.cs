@@ -40,9 +40,6 @@ namespace CommandsService.Controllers
         {
             logger.LogInformation("Hit GetCommandForPlatform: {PlatformId} / {CommandId}", platformId, commandId);
 
-            var exists = commandRepo.PlatformExists(platformId);
-            if (exists == false) return NotFound();
-
             var command = commandRepo.GetCommand(platformId, commandId);
             if (command is null) return NotFound();
 
