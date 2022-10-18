@@ -1,4 +1,5 @@
 using CommandsService.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CommandsService.Data
 {
@@ -11,14 +12,14 @@ namespace CommandsService.Data
             this.context = context;
         }
 
-        public bool SaveChanges()
+        public async Task SaveChangesAsync()
         {
-            return (context.SaveChanges() >= 0);
+            await context.SaveChangesAsync();
         }
 
-        public IEnumerable<Platform> GetAllPlatforms()
+        public async Task<IEnumerable<Platform>> GetAllPlatforms()
         {
-            return context.Platforms.ToList();
+            return await context.Platforms.ToListAsync();
         }
 
         public void CreatePlatform(Platform platform)
@@ -41,18 +42,19 @@ namespace CommandsService.Data
             return context.Platforms.Any(platform => platform.ExternalId == externalPlatformId);
         }
 
-        public IEnumerable<Command> GetCommandsForPlatform(int platformId)
+        public async Task<IEnumerable<Command>> GetCommandsForPlatform(int platformId)
         {
-            return context.Commands
+            return await context.Commands
                 .Where(command => command.PlatformId == platformId)
-                .OrderBy(command => command.Platform.Name);
+                .OrderBy(command => command.Platform.Name)
+                .ToListAsync();
         }
 
-        public Command? GetCommand(int platformId, int commandId)
+        public async Task<Command?> GetCommand(int platformId, int commandId)
         {
-            return context.Commands
+            return await context.Commands
                 .Where(command => command.PlatformId == platformId && command.Id == commandId)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
         public void CreateCommand(int platformId, Command command)

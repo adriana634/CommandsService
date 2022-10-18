@@ -22,25 +22,25 @@ namespace CommandsService.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<CommandReadDto>> GetCommandsForPlatform(int platformId)
+        public async Task<ActionResult<IEnumerable<CommandReadDto>>> GetCommandsForPlatform(int platformId)
         {
             logger.LogInformation("Hit GetCommandsForPlatform: {PlatformId}", platformId);
 
             var exists = commandRepo.PlatformExists(platformId);
             if (exists == false) return NotFound();
 
-            var commands = commandRepo.GetCommandsForPlatform(platformId);
+            var commands = await commandRepo.GetCommandsForPlatform(platformId);
 
             var result = mapper.Map<IEnumerable<CommandReadDto>>(commands);
             return Ok(result);
         }
 
         [HttpGet("{commandId}", Name = "GetCommandForPlatform")]
-        public ActionResult<CommandReadDto> GetCommandForPlatform(int platformId, int commandId)
+        public async Task<ActionResult<CommandReadDto>> GetCommandForPlatform(int platformId, int commandId)
         {
             logger.LogInformation("Hit GetCommandForPlatform: {PlatformId} / {CommandId}", platformId, commandId);
 
-            var command = commandRepo.GetCommand(platformId, commandId);
+            var command = await commandRepo.GetCommand(platformId, commandId);
             if (command is null) return NotFound();
 
             var result = mapper.Map<CommandReadDto>(command);
@@ -48,7 +48,7 @@ namespace CommandsService.Controllers
         }
 
         [HttpPost]
-        public ActionResult<CommandReadDto> CreateCommandForPlatform(int platformId, CommandCreateDto commandDto)
+        public async Task<ActionResult<CommandReadDto>> CreateCommandForPlatform(int platformId, CommandCreateDto commandDto)
         {
             logger.LogInformation("Hit CreateCommandForPlatform: {PlatformId}", platformId);
 
@@ -58,7 +58,7 @@ namespace CommandsService.Controllers
             var commandModel = mapper.Map<Command>(commandDto);
 
             commandRepo.CreateCommand(platformId, commandModel);
-            commandRepo.SaveChanges();
+            await commandRepo.SaveChangesAsync();
 
             var commandReadDto = mapper.Map<CommandReadDto>(commandModel);
             return CreatedAtRoute(nameof(GetCommandForPlatform),

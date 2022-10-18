@@ -22,11 +22,11 @@ namespace CommandsService.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<PlatformReadDto>> GetPlatforms()
+        public async Task<ActionResult<IEnumerable<PlatformReadDto>>> GetPlatforms()
         {
             logger.LogInformation("Getting Platforms from CommandsService");
 
-            var platforms = commandRepo.GetAllPlatforms();
+            var platforms = await commandRepo.GetAllPlatforms();
 
             var result = mapper.Map<IEnumerable<PlatformReadDto>>(platforms);
             return Ok(result);

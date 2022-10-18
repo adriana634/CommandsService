@@ -70,7 +70,7 @@ namespace CommandsService.EventProcessing
                 if (repo.ExternalPlatformExists(platform.ExternalId) == false)
                 {
                     repo.CreatePlatform(platform);
-                    repo.SaveChanges();
+                    repo.SaveChangesAsync();
 
                     logger.LogInformation("Platform added!");
                 }
