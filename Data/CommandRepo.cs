@@ -12,6 +12,11 @@ namespace CommandsService.Data
             this.context = context;
         }
 
+        public void SaveChanges()
+        {
+            context.SaveChanges();
+        }
+
         public async Task SaveChangesAsync()
         {
             await context.SaveChangesAsync();

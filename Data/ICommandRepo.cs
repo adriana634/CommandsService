@@ -4,6 +4,7 @@ namespace CommandsService.Data
 {
     public interface ICommandRepo
     {
+        void SaveChanges();
         Task SaveChangesAsync();
 
         // Platforms
